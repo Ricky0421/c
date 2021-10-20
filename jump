@@ -1,0 +1,143 @@
+#include <stdio.h>
+#include <windows.h>
+#include <conio.h>
+#include <math.h>
+void gotoxy(int x, int y){
+	COORD Pos = {x,y};
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),Pos);
+}
+int main(){
+	system("mode con cols=50 lines=25 | title=GAME");
+	int j=0,my=23,px=24,py=23,obx[1000]={6,24,},oby[1000]={23,20,},tech[4]={2,3,7,8},lv=1,res=0,blx[1000]={24,22,18,16,18,16},bly[1000]={21,21,19,19,17,15},techb[4]={6,},tx,ty,cn=0,cy=0,d=0,fy=24;
+	char c,vol;
+	while(1){
+		system("cls");
+		gotoxy(px,py);
+		printf("■");
+		if(j==1){
+			j=0;
+			for(int t=0;t<=4;t++){   
+				py=my-round(-1*(t-2)*(t-2)+4);
+				if(kbhit()){
+					c=getch();
+					switch(c){
+						case 'd': if(px!=48) px+=2; break;
+						case 'a': if(px!=0) px-=2; break;
+						default: break;
+					}
+				}
+				for(int i=0;i<tech[lv-1];i++){
+					if(px==obx[i]){
+						if(py==oby[i]){
+							Sleep(50);
+							res=2;
+							break;
+						}
+					}
+				}
+				for(int i=0;i<techb[lv-1];i++){
+					if(py<=bly[i]){
+						if(px==blx[i]){
+							if(bly[i]<my){
+								cn=1;
+								cy=py;
+								break;
+							}
+						}
+					}
+				}
+				for(int i=0;i<techb[lv-1];i++){
+					gotoxy(blx[i],bly[i]);
+					printf("□");
+				}
+				for(int i=0;i<tech[lv-1];i++){
+					gotoxy(obx[i],oby[i]);
+					printf("△");
+				}
+				if(cn==1){
+					if(t<=2){
+						t=4-t;
+						cn=0;
+					}
+					else break;
+				}
+				if(res==2) break;
+				system("cls");
+				gotoxy(px,py);
+				printf("■");
+				Sleep(100);
+			}
+		}  
+		my=py;
+		if(kbhit()){  
+			c=getch();
+			switch(c){
+				case ' ': j=1; break;
+				case 'd': if(px!=48) px+=2; break;
+				case 'a': if(px!=0) px-=2; break;
+				default: break;
+			}
+		} 
+		for(int i=0;i<tech[lv-1];i++){  
+			gotoxy(obx[i],oby[i]);
+			printf("△");
+		} 
+		for(int i=0;i<tech[lv-1];i++){   
+			if(px==obx[i]){
+				if(py==oby[i]){
+					Sleep(50);
+					res=2;
+					break;
+				}
+			}
+		} 
+		for(int i=0;i<techb[lv-1];i++){
+			gotoxy(blx[i],bly[i]);
+			printf("□");
+		}
+		tx=px; ty=py;
+		for(int i=0;i<techb[lv-1];i++){
+			if(px==blx[i]){
+				if(py==bly[i]){
+					px=tx;
+					py=ty;
+					break;
+				}
+			}
+		}
+		for(int i=0;i<techb[lv-1];i++){
+			if((px==blx[i] && py+1==bly[i])!=1 && my<23){
+				d+=1;
+			}
+		}
+		if(d==techb[lv-1]){
+			for(int i=0;i<techb[lv-1];i++){
+				if(px==blx[i]){
+					if(bly[i]<fy){
+						if(bly[i]>px){
+							fy=bly[i];
+						}
+					}
+				}
+			}
+			while(py+1!=fy){
+				py++;
+				if(py>23){py=23; break;}
+				system("cls");
+				gotoxy(px,py);
+				printf("■");
+				Sleep(100);
+			}
+			fy=24;
+		}
+		d=0;
+		if(res==2) break;
+		Sleep(100);
+	}
+	system("cls");
+	gotoxy(19,12);
+	if(res==2) printf("Game Over");
+	else printf("Game Completed!");
+	gotoxy(0,0);
+	scanf("%c",&vol);
+}
