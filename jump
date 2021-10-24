@@ -9,15 +9,26 @@ void gotoxy(int x, int y){
 }
 int main(){
 	system("mode con cols=50 lines=25 | title=GAME");
-	int j=0,my=23,px=24,py=23,lv2=0,lv3=0;
-	int obx[1000]={6,24,},oby[1000]={23,20,},tech[3]={2,1,1};
-	int lv=1,res=0,blx[1000]={24,22,18,16,18,16,18,20,22,14},bly[1000]={21,21,19,19,17,14,13,13,13,14},techb[3]={10,12,10},cn=0,cy=0,d=0,tg=0;
+	int j=0,my=23,px=24,py=23,lv2=0,lv3=0,com=0,prac=0;
+	int obx[1000]={6,24,},oby[1000]={23,20,},tech[3]={2,2,8};
+	int lv=1,res=0,blx[1000]={24,22,18,16,18,16,18,20,22,14},bly[1000]={21,21,19,19,17,14,13,13,13,14},techb[3]={10,10,11},cn=0,cy=0,d=0,tg=0;
 	int fx[10]={24,22},fy[10]={17,17},techf[3]={2,2,3};
-	int itx[1000]={12},ity[1000]={20},techi[3]={0,0,1},eat=0,jcs=0;
-	int bl1x[12]={24,26,26,26,26,28,30,32,24,22,28,26},bl1y[12]={21,21,20,19,18,18,18,16,18,18,14,14},ob1x[1]={28},ob1y[1]={17},f1x[2]={24,22},f1y[2]={11,11}; //2단계 레벨 데이터 
-	int bl2x[10]={2,4,6,20,22,24,8,6,4,2},bl2y[10]={21,21,21,19,19,19,16,16,16,14},ob2x[1]={4},ob2y[1]={15},f2x[3]={4,6,8},f2y[3]={11,11,11}; //3단계 레벨 데이터  
-	char c,vol;
+	int itx[1000]={12,14},ity[1000]={20,17},techi[3]={0,0,2},eat=0,jcs=0;
+	int bl1x[10]={24,26,26,28,30,32,24,22,28,26},bl1y[10]={21,21,18,18,18,16,18,18,14,14},ob1x[2]={28,26},ob1y[2]={17,20},f1x[2]={24,22},f1y[2]={11,11}; //2단계 레벨 데이터 
+	int bl2x[11]={10,12,2,4,6,8,6,4,2,16,18},bl2y[11]={22,22,21,21,21,16,16,16,14,16,16},ob2x[8]={4,10,12,18,12,14,16,18},ob2y[8]={15,21,21,15,23,23,23,23},f2x[3]={4,6,8},f2y[3]={11,11,11}; //3단계 레벨 데이터  
+	char c,vol,ram;
 	float t=0;
+	while(ram!='c' && ram!='p'){
+		printf("연습 모드: p, 일반: c\n둘 중 하나를 입력해주세요.\n");
+		scanf("%c",&ram);
+		if(ram!='c' && ram!='p'){
+			printf("다시 입력해주세요.");
+			Sleep(500);
+			system("cls");
+		}
+	}
+	if(ram=='p') prac=1;
+	else prac=0;
 	while(1){
 		system("cls");
 		gotoxy(px,py);
@@ -25,7 +36,10 @@ int main(){
 		gotoxy(20,0);
 		printf("level %d",lv); 
 		gotoxy(0,0);
-		printf("%.1f sec",t);
+		if(prac!=1){
+			printf("%.1f sec",t);
+		}
+		else printf("Practice mode");
 		if(lv==2){
 			if(lv2!=1){
 				for(int i=0;i<techb[lv-1];i++){
@@ -58,6 +72,8 @@ int main(){
 					fy[i]=f2y[i];
 				}
 				lv3=1;
+				px=0;
+				py=23;
 			}
 		}
 		if(j==1){
@@ -135,7 +151,6 @@ int main(){
 				Sleep(100);
 			}
 		}  
-		if(jcs==1) {jcs=0; j=1;}
 		my=py;
 		if(kbhit()){  
 			c=getch();
@@ -170,6 +185,11 @@ int main(){
 		for(int i=0;i<techb[lv-1];i++){
 			if(px==fx[i] && py+1==fy[i]){
 				lv++;
+				if(lv==4){
+					lv--;
+					com++;
+					break;
+				}
 				px=24;
 				py=23;
 				break;
@@ -193,7 +213,7 @@ int main(){
 				d+=1;
 			}
 		}
-		if(d==techb[lv-1]){
+		if(d==techb[lv-1] && jcs!=1){
 			while(py<23){
 				for(int i=0;i<techb[lv-1];i++){
 					if((px==blx[i] && py+1==bly[i])==1){
@@ -217,16 +237,42 @@ int main(){
 				Sleep(100);
 			}
 		}
+		if(jcs==1) {jcs=0; j=1;}
+		if(com==1) break;
 		tg=0;
 		d=0;
 		t+=0.1;
-		if(res==2) break;
+		if(res==2){
+			if(prac==0) break;
+			else{
+				if(lv==3){
+					px=0;
+					py=23;
+				}
+				else{
+					px=24;
+					py=23;
+				}
+				eat=0;
+				res=0;
+			}
+		}
 		Sleep(100);
 	}
 	system("cls");
-	gotoxy(19,12);
+	gotoxy(17,12);
 	if(res==2) printf("Game Over");
-	else printf("Game Completed!");
+	else{
+		if(prac==0){
+			printf("Game Completed!");
+		}
+		else{
+			gotoxy(14,12);
+			printf("Practicing Finished!");
+		}
+		gotoxy(14,14);
+		printf("time used: %.1f sec",t);
+	}
 	gotoxy(0,0);
 	scanf("%c",&vol);
 }
