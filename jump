@@ -7,17 +7,41 @@ void gotoxy(int x, int y){
 	COORD Pos = {x,y};
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),Pos);
 }
+void bg(){
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),8);
+	for(int i=7;i<=15;i+=2){
+		gotoxy(i,20);
+		printf("□"); 
+	}
+	for(int i=0;i<50;i+=2){
+		gotoxy(i,23);
+		printf("_");
+	}
+	for(int i=11;i<=13;i+=2){
+		gotoxy(i,17);
+		printf("□"); 
+	}
+	for(int i=19;i<=25;i+=2){
+		gotoxy(i,15);
+		printf("□"); 
+	}
+	for(int i=7;i<=15;i+=2){
+		gotoxy(i,12);
+		printf("□"); 
+	}
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),7); 
+}
 int main(){
 	system("mode con cols=50 lines=25 | title=GAME");
-	int j=0,my=23,px=24,py=23,lv2=0,lv3=0,com=0,prac=0;
+	int j=0,my=23,px=24,py=23,lv2=0,lv3=0,com=0,prac=0,pau=0,det=0;
 	int obx[1000]={6,24,},oby[1000]={23,20,},tech[3]={2,2,8};
 	int lv=1,res=0,blx[1000]={24,22,18,16,18,16,18,20,22,14},bly[1000]={21,21,19,19,17,14,13,13,13,14},techb[3]={10,10,11},cn=0,cy=0,d=0,tg=0;
 	int fx[10]={24,22},fy[10]={17,17},techf[3]={2,2,3};
 	int itx[1000]={12,14},ity[1000]={20,17},techi[3]={0,0,2},eat=0,jcs=0;
 	int bl1x[10]={24,26,26,28,30,32,24,22,28,26},bl1y[10]={21,21,18,18,18,16,18,18,14,14},ob1x[2]={28,26},ob1y[2]={17,20},f1x[2]={24,22},f1y[2]={11,11}; //2단계 레벨 데이터 
 	int bl2x[11]={10,12,2,4,6,8,6,4,2,16,18},bl2y[11]={22,22,21,21,21,16,16,16,14,16,16},ob2x[8]={4,10,12,18,12,14,16,18},ob2y[8]={15,21,21,15,23,23,23,23},f2x[3]={4,6,8},f2y[3]={11,11,11}; //3단계 레벨 데이터  
-	char c,vol,ram;
-	float t=0;
+	char c,vol,ram,detch;
+	float t=0,ct;
 	while(ram!='c' && ram!='p'){
 		printf("연습 모드: p, 일반: c\n둘 중 하나를 입력해주세요.\n");
 		scanf("%c",&ram);
@@ -31,6 +55,7 @@ int main(){
 	else prac=0;
 	while(1){
 		system("cls");
+		bg();
 		gotoxy(px,py);
 		printf("■");
 		gotoxy(20,0);
@@ -85,8 +110,27 @@ int main(){
 					switch(c){
 						case 'd': if(px!=48) px+=2; break;
 						case 'a': if(px!=0) px-=2; break;
+						case 'b': det=1;
 						default: break;
 					}
+				}
+				if(det==1){
+					det=0;
+					if(pau==0) pau=1;
+				}
+				if(pau==1){
+					if(t-ct>1){
+						system("cls");
+						gotoxy(20,12);
+						printf("Paused");
+						while(detch!='b'){
+							if(kbhit()) detch=getch();
+						}
+						ct=t;
+					}
+					detch='l';
+					pau=0;
+					c='l';
 				}
 				for(int i=0;i<tech[lv-1];i++){
 					if(px==obx[i]){
@@ -158,9 +202,28 @@ int main(){
 				case ' ': j=1; break;
 				case 'd': if(px!=48) px+=2; break;
 				case 'a': if(px!=0) px-=2; break;
+				case 'b': det=1; break;
 				default: break;
 			}
 		} 
+		if(det==1){
+			det=0;
+			if(pau==0) pau=1;
+		}
+		if(pau==1){
+			if(t-ct>1){
+				system("cls");
+				gotoxy(20,12);
+				printf("Paused");
+				while(detch!='b'){
+					if(kbhit()) detch=getch();
+				}
+				ct=t;
+				detch='l';
+				pau=0;
+				c='l';
+			}
+		}
 		for(int i=0;i<tech[lv-1];i++){  
 			gotoxy(obx[i],oby[i]);
 			printf("△");
@@ -227,8 +290,27 @@ int main(){
 					switch(c){
 						case 'a': px-=2; break;
 						case 'd': px+=2; break;
+						case 'b': det=1;
 						default: break;
 					}
+				}
+				if(det==1){
+					det=0;
+					if(pau==0) pau=1;
+				}
+				if(pau==1){
+					if(t-ct>1){
+						system("cls");
+						gotoxy(20,12);
+						printf("Paused");
+						while(detch!='b'){
+							if(kbhit()) detch=getch();
+						}
+						ct=t;
+					}
+					detch='l';
+					pau=0;
+					c='l';
 				}
 				py++;
 				system("cls");
