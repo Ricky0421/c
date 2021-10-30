@@ -30,6 +30,7 @@ int main(){
 			}
 		}
 	}
+	system("cls");
 	if(ram=='m') make=1;
 	if(ram=='p') prac=1;
 	else prac=0;
@@ -52,12 +53,17 @@ int main(){
 		system("cls");
 		prac=1;
 	}
+	else{
+		gotoxy(0,0);
+		printf("a,d로 좌우로 움직이고,\n스페이스바로 점프할 수 있습니다.");
+		Sleep(500);
+	}
 	while(1){
 		if(make==1 && g==0){
 			while(g==0){
 				if(tut==0){
 					gotoxy(0,0);
-					printf("가시 설치: t, 길 설치: b, 도착지 설치: f\n");
+					printf("가시 설치: t, 길 설치: b, 도착지 설치: f,\n되돌리기: r,테스트: g\n");
 					printf("길의 옆면은 판정이 없습니다."); 
 				}
 				if(poss==1){
@@ -65,7 +71,20 @@ int main(){
 					printf("Verified");
 				}
 				if(kbhit()){
+					system("cls");
 					tut=1;
+					for(int i=0;i<techb[lv-1];i++){
+					gotoxy(blx[i],bly[i]);
+					printf("□");
+					}
+					for(int i=0;i<tech[lv-1];i++){
+					gotoxy(obx[i],oby[i]);
+					printf("△");
+					}
+					for(int i=0;i<techf[lv-1];i++){  
+						gotoxy(fx[i],fy[i]);
+						printf("▣");
+					} 
 					for(int i=0;i<=23;i+=2){
 					gotoxy(0,i);
 					printf("%d",i);
@@ -90,7 +109,7 @@ int main(){
 					}
 					if(spike==1){
 						turn++;
-						ha[turn-1]='t';
+						ha[turn]='t';
 						tech[0]++;
 						spike=0;
 						printf("가시를 설치할 좌표를 입력해주세요.\n=> ");
@@ -100,7 +119,7 @@ int main(){
 					}
 					else if(block==1){
 						turn++;
-						ha[turn-1]='b';
+						ha[turn]='b';
 						techb[0]++;
 						block=0;
 						printf("길을 설치할 좌표를 입력해주세요. \n(y좌표가 23 이하여야 판정이 생깁니다)\n=> ");
@@ -110,7 +129,7 @@ int main(){
 					}
 					else if(finish==1){
 						turn++;
-						ha[turn-1]='f';
+						ha[turn]='f';
 						techf[0]++;
 						finish=0;
 						printf("도착지를 설치할 좌표를 입력해주세요.\n=> ");
@@ -120,9 +139,12 @@ int main(){
 					}
 					else if(undo==1){
 						undo=0;
-						if(ha[turn-1]=='t'){ obx[tech[0]-1]=0; oby[tech[0]-1]=0; tech[0]--;}
-						else if(ha[turn-1]=='b'){ blx[techb[0]-1]=0; bly[techb[0]-1]=0; techb[0]--;}
-						else if(ha[turn-1]=='f'){ fx[techf[0]-1]=0; fy[techf[0]-1]=0; techf[0]--;}
+						if(turn>=1){
+							if(ha[turn]=='t'){ obx[tech[0]-1]=0; oby[tech[0]-1]=0; tech[0]--;}
+							else if(ha[turn]=='b'){ blx[techb[0]-1]=0; bly[techb[0]-1]=0; techb[0]--;}
+							else if(ha[turn]=='f'){ fx[techf[0]-1]=0; fy[techf[0]-1]=0; techf[0]--;}
+							turn--;
+						}
 					}
 					system("cls");
 					for(int i=0;i<techb[lv-1];i++){
