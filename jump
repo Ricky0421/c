@@ -457,6 +457,7 @@ int main(){
 	if(res==2) printf("Game Over");
 	else{
 		if(prac==0){
+			system("color 70");
 			printf("Game Completed!");
 		}
 		else{
