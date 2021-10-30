@@ -166,7 +166,7 @@ int main(){
 		gotoxy(px,py);
 		printf("■");
 		gotoxy(20,0);
-		printf("level %d",lv); 
+		if(make==0) printf("level %d",lv); 
 		gotoxy(0,0);
 		if(prac!=1){
 			printf("%.1f sec",t);
@@ -295,7 +295,7 @@ int main(){
 							break;
 						}
 					}
-			 }	
+				}
 				if(jcs==1) break;
 				if(res==2) break;
 				system("cls");
@@ -312,7 +312,7 @@ int main(){
 				case 'd': if(px!=48) px+=2; break;
 				case 'a': if(px!=0) px-=2; break;
 				case 'b': det=1; break;
-				case 'g': if(make==1) g=0; break;
+				case 'g': g=0; break;
 				default: break;
 			}
 		} 
@@ -367,7 +367,7 @@ int main(){
 					py=23;
 					break;
 				}
-				else g=0;
+				else{g=0; poss=1; break;}
 			}
 		}
 		for(int i=eat;i<techi[lv-1];i++){
