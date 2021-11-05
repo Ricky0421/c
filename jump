@@ -17,7 +17,7 @@ int main(){
 	int bl1x[10]={24,26,26,28,30,32,24,22,28,26},bl1y[10]={21,21,18,18,18,16,18,18,14,14},ob1x[2]={28,26},ob1y[2]={17,20},f1x[2]={24,22},f1y[2]={11,11}; //2단계 레벨 데이터 
 	int bl2x[11]={10,12,2,4,6,8,6,4,2,16,18},bl2y[11]={22,22,21,21,21,16,16,16,14,16,16},ob2x[8]={4,10,12,18,12,14,16,18},ob2y[8]={15,21,21,15,23,23,23,23},f2x[3]={4,6,8},f2y[3]={11,11,11}; //3단계 레벨 데이터  
 	int make=0,g=0,spike=0,block=0,finish=0,mkx,mky,turn=0,undo=0,tut=0,poss=0; //맵 제작 
-	char c,vol,ram='q',detch,ha[1000];
+	char c,vol,ram='q',detch,ha[1000],item=0;
 	float t=0;
 	while(ram!='c' && ram!='p' && ram!='m'){
 		printf("연습 모드: p, 일반: c, 제작 모드: m\n셋 중 하나를 입력해주세요.\n");
@@ -47,9 +47,14 @@ int main(){
 			fx[i]=0;
 			fy[i]=0;
 		}
+		for(int i=0;i<techi[lv-1];i++){
+			itx[i]=0;
+			ity[i]=0;
+		}
 		tech[0]=0;
 		techb[0]=0;
 		techf[0]=0;
+		techi[0]=0;
 		system("cls");
 		prac=1;
 	}
@@ -60,18 +65,39 @@ int main(){
 	}
 	while(1){
 		if(make==1 && g==0){
+			system("cls");
+			if(poss==1){
+				gotoxy(20,0);
+				printf("Verified");
+			}
+			for(int i=0;i<techb[lv-1];i++){
+				gotoxy(blx[i],bly[i]);
+				printf("□");
+			}
+			for(int i=0;i<tech[lv-1];i++){
+				gotoxy(obx[i],oby[i]);
+				printf("△");
+			}
+			for(int i=0;i<techf[lv-1];i++){  
+				gotoxy(fx[i],fy[i]);
+				printf("▣");
+			} 
+			for(int i=0;i<techi[lv-1];i++){  
+				gotoxy(itx[i],ity[i]);
+				printf("◎");
+			} 
 			while(g==0){
 				if(tut==0){
 					gotoxy(0,0);
-					printf("가시 설치: t, 길 설치: b, 도착지 설치: f,\n되돌리기: r,테스트: g\n");
+					printf("가시 설치: t, 길 설치: b, 도착지 설치: f,\n아이템 설치:i,\n되돌리기: r,테스트: g\n");
 					printf("길의 옆면은 판정이 없습니다."); 
-				}
-				if(poss==1){
-					gotoxy(20,0);
-					printf("Verified");
 				}
 				if(kbhit()){
 					system("cls");
+					if(poss==1){
+						gotoxy(20,0);
+						printf("Verified");
+					}
 					tut=1;
 					for(int i=0;i<techb[lv-1];i++){
 					gotoxy(blx[i],bly[i]);
@@ -99,6 +125,7 @@ int main(){
 						case 'b': block=1; poss=0; break;
 						case 'f': finish=1; poss=0; break;
 						case 'r': undo=1; break;
+						case 'i': item=1; break;
 						case 'g': g=1; break;
 						default: break;
 					}
@@ -137,12 +164,23 @@ int main(){
 						fx[techf[0]-1]=mkx*2;
 						fy[techf[0]-1]=mky;
 					}
+					else if(item==1){
+						turn++;
+						ha[turn]='i';
+						techi[0]++;
+						item=0;
+						printf("아이템을 설치할 좌표를 입력해주세요.\n=> ");
+						scanf("%d %d",&mkx,&mky);
+						itx[techi[0]-1]=mkx*2;
+						ity[techi[0]-1]=mky;
+					}
 					else if(undo==1){
 						undo=0;
 						if(turn>=1){
 							if(ha[turn]=='t'){ obx[tech[0]-1]=0; oby[tech[0]-1]=0; tech[0]--;}
 							else if(ha[turn]=='b'){ blx[techb[0]-1]=0; bly[techb[0]-1]=0; techb[0]--;}
 							else if(ha[turn]=='f'){ fx[techf[0]-1]=0; fy[techf[0]-1]=0; techf[0]--;}
+							else if(ha[turn]=='i'){ itx[techi[0]-1]=0; ity[techi[0]-1]=0; techi[0]--;}
 							turn--;
 						}
 					}
@@ -158,6 +196,10 @@ int main(){
 					for(int i=0;i<techf[lv-1];i++){  
 						gotoxy(fx[i],fy[i]);
 						printf("▣");
+					} 
+					for(int i=0;i<techi[lv-1];i++){  
+						gotoxy(itx[i],ity[i]);
+						printf("◎");
 					} 
 				}
 			}
