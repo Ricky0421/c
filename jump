@@ -17,16 +17,17 @@ int main(){
 	int bl1x[10]={24,26,26,28,30,32,24,22,28,26},bl1y[10]={21,21,18,18,18,16,18,18,14,14},ob1x[2]={28,26},ob1y[2]={17,20},f1x[2]={24,22},f1y[2]={11,11}; //2단계 레벨 데이터 
 	int bl2x[11]={10,12,2,4,6,8,6,4,2,16,18},bl2y[11]={22,22,21,21,21,16,16,16,14,16,16},ob2x[8]={4,10,12,18,12,14,16,18},ob2y[8]={15,21,21,15,23,23,23,23},f2x[3]={4,6,8},f2y[3]={11,11,11}; //3단계 레벨 데이터  
 	int make=0,g=0,spike=0,block=0,finish=0,mkx,mky,turn=0,undo=0,tut=0,poss=0; //맵 제작 
+	int gx[1000]={0,},gy[1000]={0,},techg[1]={0},grav=0,mgrav=0,gc=0,gb=0; 
 	char c,vol,ram='q',detch,ha[1000],item=0;
 	float t=0;
 	while(ram!='c' && ram!='p' && ram!='m'){
-		printf("연습 모드: p, 일반: c, 제작 모드: m\n셋 중 하나를 입력해주세요.\n");
+		printf("연습 모드: p, 일반: c, 제작 모드: m\n셋 중 하나를 입력해주세요.\n"); 
 		scanf("%c",&ram);
 		if(ram!='c' && ram!='p'){
 			if(ram!='m'){
 				printf("다시 입력해주세요.");
 				Sleep(500);
-				system("cls");
+				system("cls"); 
 			}
 		}
 	}
@@ -86,10 +87,14 @@ int main(){
 				gotoxy(itx[i],ity[i]);
 				printf("◎");
 			} 
+			for(int i=0;i<techg[lv-1];i++){  
+				gotoxy(gx[i],gy[i]);
+				printf("◇");
+			} 
 			while(g==0){
 				if(tut==0){
 					gotoxy(0,0);
-					printf("가시 설치: t, 길 설치: b, 도착지 설치: f,\n아이템 설치:i,\n되돌리기: r,테스트: g\n");
+					printf("가시 설치: t, 길 설치: b, 도착지 설치: f,\n아이템 설치:i, 중력반전 설치:s,\n되돌리기: r,테스트: g\n");
 					printf("길의 옆면은 판정이 없습니다."); 
 				}
 				if(kbhit()){
@@ -127,6 +132,7 @@ int main(){
 						case 'r': undo=1; break;
 						case 'i': item=1; break;
 						case 'g': g=1; break;
+						case 's': mgrav=1; break;
 						default: break;
 					}
 					if(g==1){
@@ -174,6 +180,16 @@ int main(){
 						itx[techi[0]-1]=mkx*2;
 						ity[techi[0]-1]=mky;
 					}
+					else if(mgrav==1){
+						turn++;
+						ha[turn]='g';
+						techg[0]++;
+						mgrav=0;
+						printf("중력반전을 설치할 좌표를 입력해주세요.\n=> ");
+						scanf("%d %d",&mkx,&mky);
+						gx[techg[0]-1]=mkx*2;
+						gy[techg[0]-1]=mky;
+					}
 					else if(undo==1){
 						undo=0;
 						if(turn>=1){
@@ -181,17 +197,18 @@ int main(){
 							else if(ha[turn]=='b'){ blx[techb[0]-1]=0; bly[techb[0]-1]=0; techb[0]--;}
 							else if(ha[turn]=='f'){ fx[techf[0]-1]=0; fy[techf[0]-1]=0; techf[0]--;}
 							else if(ha[turn]=='i'){ itx[techi[0]-1]=0; ity[techi[0]-1]=0; techi[0]--;}
+							else if(ha[turn]=='g'){ gx[techg[0]-1]=0; gy[techg[0]-1]=0; techg[0]--;}
 							turn--;
 						}
-					}
+					} 
 					system("cls");
 					for(int i=0;i<techb[lv-1];i++){
-					gotoxy(blx[i],bly[i]);
-					printf("□");
+						gotoxy(blx[i],bly[i]);
+						printf("□");
 					}
 					for(int i=0;i<tech[lv-1];i++){
-					gotoxy(obx[i],oby[i]);
-					printf("△");
+						gotoxy(obx[i],oby[i]);
+						printf("△");
 					}
 					for(int i=0;i<techf[lv-1];i++){  
 						gotoxy(fx[i],fy[i]);
@@ -200,6 +217,10 @@ int main(){
 					for(int i=0;i<techi[lv-1];i++){  
 						gotoxy(itx[i],ity[i]);
 						printf("◎");
+					} 
+					for(int i=0;i<techg[lv-1];i++){  
+						gotoxy(gx[i],gy[i]);
+						printf("◇");
 					} 
 				}
 			}
@@ -256,7 +277,8 @@ int main(){
 		if(j==1){
 			j=0;
 			for(int t=0;t<=4;t++){   
-				py=my-round(-1*(t-2)*(t-2)+4);
+				if(grav==0) py=my-round(-1*(t-2)*(t-2)+4);
+				else py=my+round(-1*(t-2)*(t-2)+4);
 				if(kbhit()){
 					c=getch();
 					switch(c){
@@ -293,26 +315,67 @@ int main(){
 					}
 				}
 				for(int i=0;i<techb[lv-1];i++){
-					if(py<=bly[i]){
-						if(px==blx[i]){
-							if(bly[i]<my){
-								cn=1;
-								cy=py;
-								break;
+					if(grav==0){
+						if(py<=bly[i]){
+							if(px==blx[i]){
+								if(bly[i]<my){
+									cn=1;
+									cy=py;
+									break;
+								}
+							}
+						}
+					}
+					else{
+						if(py>=bly[i]){
+							if(px==blx[i]){
+								if(bly[i]>my){
+									cn=1;
+									cy=py;
+									break;
+								}
 							}
 						}
 					}
 				}
 				for(int i=0;i<techf[lv-1];i++){
-					if(py<=fy[i]){
-						if(px==fx[i]){
-							if(fy[i]<my){
-								cn=1;
-								cy=py;
-								break;
+					if(grav==0){
+						if(py<=fy[i]){
+							if(px==fx[i]){
+								if(fy[i]<my){
+									cn=1;
+									cy=py;
+									break;
+								}
 							}
 						}
 					}
+					else{
+						if(py>=fy[i]){
+							if(px==fx[i]){
+								if(fy[i]>my){
+									cn=1;
+									cy=py;
+									break;
+								}
+							}
+						}
+					}
+				}
+				for(int i=0;i<techg[lv-1];i++){   
+					if(px==gx[i]){
+						if(py-gy[i]<=1){
+							Sleep(50);
+							gc=1;
+							break;
+						}
+					}
+				}  
+				if(gc==1){
+					gc=0;
+					if(grav==0) grav=1;
+					else grav=0;
+					gb=1;
 				}
 				for(int i=0;i<techb[lv-1];i++){
 					gotoxy(blx[i],bly[i]);
@@ -338,6 +401,7 @@ int main(){
 						}
 					}
 				}
+				if(gb==1){gb=0; break;}
 				if(jcs==1) break;
 				if(res==2) break;
 				system("cls");
@@ -425,12 +489,40 @@ int main(){
 				}
 			}
 		}
+		for(int i=0;i<techg[lv-1];i++){  
+			gotoxy(gx[i],gy[i]);
+			printf("◇");
+		} 
+		for(int i=0;i<techg[lv-1];i++){   
+			if(px==gx[i]){
+				if(py==gy[i]){
+					Sleep(50);
+					gc=1;
+					break;
+				}
+			}
+		}  
+		if(gc==1){
+			gc=0;
+			if(grav==0) grav=1;
+			else grav=0;
+		}
+		if(grav==0){
 			for(int i=0;i<techb[lv-1];i++){
 				if((px==blx[i] && py+1==bly[i])!=1 && my<23){
 					d+=1;
 				}
 			}
-			if(d==techb[lv-1] && jcs!=1){
+		}
+		else{
+			for(int i=0;i<techb[lv-1];i++){
+				if((px==blx[i] && py-1==bly[i])!=1 && my>1){
+					d+=1;
+				}
+			}
+		}
+		if(d==techb[lv-1] && jcs!=1){
+			if(grav==0){
 				while(py<23){
 					for(int i=0;i<techb[lv-1];i++){
 						if((px==blx[i] && py+1==bly[i])==1){
@@ -465,6 +557,21 @@ int main(){
 						pau=0;
 						c='l';
 					}
+					for(int i=0;i<techg[lv-1];i++){   
+						if(px==gx[i]){
+							if(py-gy[i]<=1){
+								Sleep(50);
+								gc=1;
+								break;
+							}
+						}
+					}  
+					if(gc==1){
+						gc=0;
+						grav=1;
+						gb=1;
+					}
+					if(gb==1) {gb=0; break;}
 					py++;
 					system("cls");
 					gotoxy(px,py);
@@ -472,6 +579,64 @@ int main(){
 					Sleep(100);
 				}
 			}
+			else{
+				while(py>1){
+					for(int i=0;i<techb[lv-1];i++){
+						if((px==blx[i] && py-1==bly[i])==1){
+							tg=1;
+							break;
+						}
+					}
+					if(tg==1) break;
+					if(kbhit()){
+						c=getch();
+						switch(c){
+							case 'a': px-=2; break;
+							case 'd': px+=2; break;
+							case 'b': det=1;
+							default: break;
+						}
+					}
+					if(det==1){
+						det=0;
+						if(pau==0) pau=1;
+					}
+					if(pau==1){
+						system("cls");
+						gotoxy(20,12);
+						printf("Paused");
+						gotoxy(11,14);
+						printf("[Press B again to begin]");
+						while(detch!='b'){
+							if(kbhit()) detch=getch();
+						}
+						detch='l';
+						pau=0;
+						c='l';
+					}
+					for(int i=0;i<techg[lv-1];i++){   
+						if(px==gx[i]){
+							if(py-gy[i]<=1){
+								Sleep(50);
+								gc=1;
+								break;
+							}
+						}
+					}  
+					if(gc==1){
+						gc=0;
+						grav=0;
+						gb=1;
+					}
+					if(gb==1) {gb=0; break;}
+					py--;
+					system("cls");
+					gotoxy(px,py);
+					printf("■");
+					Sleep(100);
+				}
+			}
+		}
 		if(jcs==1) {jcs=0; j=1;}
 		if(com==1) break;
 		tg=0;
