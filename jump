@@ -9,7 +9,7 @@ void gotoxy(int x, int y){
 }
 int main(){
 	system("mode con cols=50 lines=25 | title=GAME");
-	int j=0,my=23,px=24,py=23,lv2=0,lv3=0,com=0,prac=0,pau=0,det=0;
+	int j=0,my=23,px=24,py=23,lv2=0,lv3=0,com=0,prac=0,pau=0,det=0,fturn=0;
 	int obx[1000]={6,24,},oby[1000]={23,20,},tech[3]={2,2,8};
 	int lv=1,res=0,blx[1000]={24,22,18,16,18,16,18,20,22,14},bly[1000]={21,21,19,19,17,14,13,13,13,14},techb[3]={10,10,11},cn=0,cy=0,d=0,tg=0;
 	int fx[10]={24,22},fy[10]={17,17},techf[3]={2,2,3};
@@ -116,6 +116,10 @@ int main(){
 						gotoxy(fx[i],fy[i]);
 						printf("▣");
 					} 
+					for(int i=0;i<techg[lv-1];i++){  
+						gotoxy(gx[i],gy[i]);
+						printf("◇");
+					} 
 					for(int i=0;i<=23;i+=2){
 					gotoxy(0,i);
 					printf("%d",i);
@@ -131,7 +135,7 @@ int main(){
 						case 'f': finish=1; poss=0; break;
 						case 'r': undo=1; break;
 						case 'i': item=1; break;
-						case 'g': g=1; break;
+						case 'g': g=1; grav=0; break;
 						case 's': mgrav=1; break;
 						default: break;
 					}
@@ -185,7 +189,7 @@ int main(){
 						ha[turn]='g';
 						techg[0]++;
 						mgrav=0;
-						printf("중력반전을 설치할 좌표를 입력해주세요.\n=> ");
+						printf("중력반전을 설치할 좌표를 입력해주세요.\n(떨어지는 중엔 중력이 바뀌지 않습니다.)\n=> ");
 						scanf("%d %d",&mkx,&mky);
 						gx[techg[0]-1]=mkx*2;
 						gy[techg[0]-1]=mky;
@@ -318,7 +322,7 @@ int main(){
 					if(grav==0){
 						if(py<=bly[i]){
 							if(px==blx[i]){
-								if(bly[i]<my){
+								if(bly[i]<my || 1>my){
 									cn=1;
 									cy=py;
 									break;
@@ -329,7 +333,7 @@ int main(){
 					else{
 						if(py>=bly[i]){
 							if(px==blx[i]){
-								if(bly[i]>my){
+								if(bly[i]>my || 23<my){
 									cn=1;
 									cy=py;
 									break;
@@ -364,7 +368,7 @@ int main(){
 				}
 				for(int i=0;i<techg[lv-1];i++){   
 					if(px==gx[i]){
-						if(py-gy[i]<=1){
+						if(abs(py-gy[i])<=1){
 							Sleep(50);
 							gc=1;
 							break;
@@ -373,17 +377,9 @@ int main(){
 				}  
 				if(gc==1){
 					gc=0;
-					if(grav==0) grav=1;
-					else grav=0;
+					if(grav==0) { grav=1; }
+					else { grav=0; }
 					gb=1;
-				}
-				for(int i=0;i<techb[lv-1];i++){
-					gotoxy(blx[i],bly[i]);
-					printf("□");
-				}
-				for(int i=0;i<tech[lv-1];i++){
-					gotoxy(obx[i],oby[i]);
-					printf("△");
 				}
 				if(cn==1){
 					if(t<=2){
@@ -522,6 +518,7 @@ int main(){
 			}
 		}
 		if(d==techb[lv-1] && jcs!=1){
+			fturn=0;
 			if(grav==0){
 				while(py<23){
 					for(int i=0;i<techb[lv-1];i++){
@@ -557,21 +554,6 @@ int main(){
 						pau=0;
 						c='l';
 					}
-					for(int i=0;i<techg[lv-1];i++){   
-						if(px==gx[i]){
-							if(py-gy[i]<=1){
-								Sleep(50);
-								gc=1;
-								break;
-							}
-						}
-					}  
-					if(gc==1){
-						gc=0;
-						grav=1;
-						gb=1;
-					}
-					if(gb==1) {gb=0; break;}
 					py++;
 					system("cls");
 					gotoxy(px,py);
@@ -581,6 +563,7 @@ int main(){
 			}
 			else{
 				while(py>1){
+					fturn++;
 					for(int i=0;i<techb[lv-1];i++){
 						if((px==blx[i] && py-1==bly[i])==1){
 							tg=1;
@@ -614,21 +597,6 @@ int main(){
 						pau=0;
 						c='l';
 					}
-					for(int i=0;i<techg[lv-1];i++){   
-						if(px==gx[i]){
-							if(py-gy[i]<=1){
-								Sleep(50);
-								gc=1;
-								break;
-							}
-						}
-					}  
-					if(gc==1){
-						gc=0;
-						grav=0;
-						gb=1;
-					}
-					if(gb==1) {gb=0; break;}
 					py--;
 					system("cls");
 					gotoxy(px,py);
