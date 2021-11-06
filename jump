@@ -17,7 +17,7 @@ int main(){
 	int bl1x[10]={24,26,26,28,30,32,24,22,28,26},bl1y[10]={21,21,18,18,18,16,18,18,14,14},ob1x[2]={28,26},ob1y[2]={17,20},f1x[2]={24,22},f1y[2]={11,11}; //2단계 레벨 데이터 
 	int bl2x[11]={10,12,2,4,6,8,6,4,2,16,18},bl2y[11]={22,22,21,21,21,16,16,16,14,16,16},ob2x[8]={4,10,12,18,12,14,16,18},ob2y[8]={15,21,21,15,23,23,23,23},f2x[3]={4,6,8},f2y[3]={11,11,11}; //3단계 레벨 데이터  
 	int make=0,g=0,spike=0,block=0,finish=0,mkx,mky,turn=0,undo=0,tut=0,poss=0; //맵 제작 
-	int gx[1000]={0,},gy[1000]={0,},techg[1]={0},grav=0,mgrav=0,gc=0,gb=0; 
+	int gx[1000]={0,},gy[1000]={0,},techg[3]={0,},grav=0,mgrav=0,gc=0,gb=0; 
 	char c,vol,ram='q',detch,ha[1000],item=0;
 	float t=0;
 	while(ram!='c' && ram!='p' && ram!='m'){
@@ -457,19 +457,37 @@ int main(){
 			printf("▣");
 		} 
 		for(int i=0;i<techb[lv-1];i++){
-			if(px==fx[i] && py+1==fy[i]){
-				if(make!=1){
-					lv++;
-					if(lv==4){
-						lv--;
-						com++;
+			if(grav==0){
+				if(px==fx[i] && py+1==fy[i]){
+					if(make!=1){
+						lv++;
+						if(lv==4){
+							lv--;
+							com++;
+							break;
+						}
+						px=24;
+						py=23;
 						break;
 					}
-					px=24;
-					py=23;
-					break;
+					else{g=0; poss=1; break;}
 				}
-				else{g=0; poss=1; break;}
+			}
+			else{
+				if(px==fx[i] && py-1==fy[i]){
+					if(make!=1){
+						lv++;
+						if(lv==4){
+							lv--;
+							com++;
+							break;
+						}
+						px=24;
+						py=23;
+						break;
+					}
+					else{g=0; poss=1; break;}
+				}
 			}
 		}
 		for(int i=eat;i<techi[lv-1];i++){
