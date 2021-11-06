@@ -696,3 +696,4 @@ int main(){
 	gotoxy(0,0);
 	scanf("%c",&vol);
 }
+
