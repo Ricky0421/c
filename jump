@@ -7,16 +7,6 @@ void gotoxy(int x, int y){
 	COORD Pos = {x,y};
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),Pos);
 }
-void draw(){
-	for(int i=0;i<=23;i+=2){
-		gotoxy(0,i);
-		printf("%d",i);
-	}
-	for(int i=0;2*i<=48;i+=2){
-		gotoxy(i*2,24);
-		printf("%d",i);
-	}
-}
 int main(){
 	system("mode con cols=50 lines=25 | title=GAME");
 	int j=0,my=23,px=24,py=23,lv2=0,lv3=0,com=0,prac=0,pau=0,det=0,fturn=0,rp=32;
@@ -163,20 +153,50 @@ int main(){
 					if(spike==1){
 						turn++;
 						ha[turn]='t';
-						tech[0]++;
 						spike=0;
 						printf("가시를 설치할 좌표를 입력해주세요.\n=> ");
 						scanf("%d %d",&mkx,&mky);
 						while(rp<0 || rp>3){
 							system("cls");
-							draw();
-							printf("가시의 방향을 정해주세요.\n(아래:0, 왼쪽:1, 위:2, 오른쪽:3)\n=> ");
+							for(int i=0;i<techb[lv-1];i++){
+								gotoxy(blx[i],bly[i]);
+								printf("□");
+							}
+							for(int i=0;i<tech[lv-1];i++){
+								gotoxy(obx[i],oby[i]);
+								if(obt[i]==0) printf("△");
+								if(obt[i]==1) printf("▷");
+								if(obt[i]==2) printf("▽");
+								else printf("◁");
+							}
+							for(int i=0;i<techf[lv-1];i++){  
+								gotoxy(fx[i],fy[i]);
+								printf("▣");
+							} 
+							for(int i=0;i<techi[lv-1];i++){  
+								gotoxy(itx[i],ity[i]);
+								printf("◎");
+							} 
+							for(int i=0;i<techg[lv-1];i++){  
+								gotoxy(gx[i],gy[i]);
+								printf("◇");
+							} 
+							for(int i=0;i<=23;i+=2){
+								gotoxy(0,i);
+								printf("%d",i);
+							}
+							for(int i=0;2*i<=48;i+=2){
+								gotoxy(i*2,24);
+								printf("%d",i);
+							}
+							printf("\n가시의 방향을 정해주세요.\n(아래:0, 왼쪽:1, 위:2, 오른쪽:3)\n=> ");
 							scanf("%d",&rp);
 							if(rp<0 && rp>3){
 								printf("다시 입력해주세요.");
 								Sleep(500);
 							}
 						}
+						tech[0]++;
 						obx[tech[0]-1]=mkx*2;
 						oby[tech[0]-1]=mky;
 						obt[tech[0]-1]=rp;
@@ -664,6 +684,7 @@ int main(){
 		if(res==2){
 			if(prac==0) break;
 			else{
+				grav=0;
 				if(lv==3){
 					px=0;
 					py=23;
@@ -696,5 +717,3 @@ int main(){
 	gotoxy(0,0);
 	scanf("%c",&vol);
 }
-
-
