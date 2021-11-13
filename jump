@@ -66,6 +66,7 @@ int main(){
 	}
 	while(1){
 		if(make==1 && g==0){ //맵 만들기 코드 
+			eat=0;
 			system("cls");
 			if(poss==1){
 				gotoxy(20,0);
@@ -121,6 +122,10 @@ int main(){
 					for(int i=0;i<techf[lv-1];i++){  
 						gotoxy(fx[i],fy[i]);
 						printf("▣");
+					} 
+					for(int i=0;i<techi[lv-1];i++){  
+						gotoxy(itx[i],ity[i]);
+						printf("◎");
 					} 
 					for(int i=0;i<techg[lv-1];i++){  
 						gotoxy(gx[i],gy[i]);
