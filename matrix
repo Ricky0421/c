@@ -1,0 +1,35 @@
+#include <stdio.h>
+#include <conio.h>
+#include <windows.h>
+int main(){
+	system("mode con cols=50 lines=25 | title=행렬"); 
+	int a,b,c,l,m,z;
+	char d;
+	printf("행렬 A의 크기를 입력해주세요. \nex) 2x3 => "); 
+	scanf("%dx%d",&a,&b);
+	printf("행렬 B의 열의 개수를 입력해주세요. \n=> "); 
+	scanf("%d",&c);
+	int p[a][b]={0,},q[b][c]={0,};
+	while(1){
+		system("cls");
+		printf("행렬 A 수정: e\n행렬 B 수정: r");
+		while(d!='e' && d!='r'){
+			if(kbhit()==1) d=getch();
+		}
+		if(d=='e'){
+			system("cls");
+			while(1){
+				for(int i=0;i<a;i++){
+					for(int j=0;j<b;j++){
+						printf("%d ",p[i][j]);
+					}
+				}
+				printf("수정할 원소의 위치를 입력하세요. ex) 2 3 \n=>");
+				scanf("%d %d",&l,&m);
+				printf("수정 값을 입력해주세요.\n=> ");
+				scanf("%d", &z);
+				p[l-1][m-1]=z;
+			}
+		}
+	}
+}
