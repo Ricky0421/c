@@ -3,33 +3,127 @@
 #include <windows.h>
 int main(){
 	system("mode con cols=50 lines=25 | title=행렬"); 
-	int a,b,c,l,m,z;
-	char d;
+	int a,b,c,l,m,z,sum,px,py;
+	char d,y;
 	printf("행렬 A의 크기를 입력해주세요. \nex) 2x3 => "); 
 	scanf("%dx%d",&a,&b);
+	system("cls");
 	printf("행렬 B의 열의 개수를 입력해주세요. \n=> "); 
 	scanf("%d",&c);
-	int p[a][b]={0,},q[b][c]={0,};
+	int p[a][b];
+	int q[b][c];
+	int f[a][c];
+	for(int i=0;i<a;i++){
+		for(int j=0;j<b;j++){
+			p[i][j]=0;
+		}
+	}
+	for(int i=0;i<b;i++){
+		for(int j=0;j<c;j++){
+			q[i][j]=0;
+		}
+	}
 	while(1){
 		system("cls");
-		printf("행렬 A 수정: e\n행렬 B 수정: r");
-		while(d!='e' && d!='r'){
+		printf("행렬 A 수정: e\n행렬 B 수정: r\n계산: c");
+		while(d!='e' && d!='r' && d!='c'){
 			if(kbhit()==1) d=getch();
 		}
 		if(d=='e'){
+			d='z';
 			system("cls");
 			while(1){
 				for(int i=0;i<a;i++){
 					for(int j=0;j<b;j++){
 						printf("%d ",p[i][j]);
 					}
+					printf("\n");
 				}
-				printf("수정할 원소의 위치를 입력하세요. ex) 2 3 \n=>");
-				scanf("%d %d",&l,&m);
-				printf("수정 값을 입력해주세요.\n=> ");
-				scanf("%d", &z);
-				p[l-1][m-1]=z;
+				printf("\n\n돌아가기: q\n수정하기: w");
+				while(y!='q' && y!='w'){
+					if(kbhit()==1){
+						y=getch();
+					}
+				}
+				if(y=='q'){
+					y='z';
+					break;
+				}
+				else{
+					y='z';
+					system("cls");
+					for(int i=0;i<a;i++){
+						for(int j=0;j<b;j++){
+							printf("%d ",p[i][j]);
+						}
+						printf("\n");
+					}
+					printf("수정할 원소의 위치를 입력하세요. ex) 2 3 \n=>");
+					scanf("%d %d",&l,&m);
+					printf("수정 값을 입력해주세요.\n=> ");
+					scanf("%d", &z);
+					p[m-1][l-1]=z;
+				}
 			}
 		}
+		else if(d=='r'){
+			d='z';
+			system("cls");
+			while(1){
+				for(int i=0;i<b;i++){
+					for(int j=0;j<c;j++){
+						printf("%d ",q[i][j]);
+					}
+					printf("\n");
+				}
+				printf("\n\n돌아가기: q\n수정하기: w");
+				while(y!='q' && y!='w'){
+					if(kbhit()==1){
+						y=getch();
+					}
+				}
+				if(y=='q'){
+					y='z';
+					break;
+				}
+				else{
+					y='z';
+					system("cls");
+					for(int i=0;i<b;i++){
+						for(int j=0;j<c;j++){
+							printf("%d ",q[i][j]);
+						}
+						printf("\n");
+					}
+					printf("수정할 원소의 위치를 입력하세요. ex) 2 3 \n=>");
+					scanf("%d %d",&l,&m);
+					printf("수정 값을 입력해주세요.\n=> ");
+					scanf("%d", &z);
+					q[m-1][l-1]=z;
+				}
+			}
+		}
+		else{
+			px=0;
+			py=0;
+			for(int i=0;i<a;i++){
+				for(int n=0;n<c;n++){
+					sum=0;
+					for(int j=0;j<b;j++) sum+=p[i][j]*q[j][n];
+					f[py][px]=sum;
+					px++;
+				}
+				px=0;
+				py++;
+			}
+			break;
+		}		
+	}
+	system("cls");
+	for(int i=0;i<a;i++){
+		for(int j=0;j<c;j++){
+			printf("%d ",f[i][j]);
+		}
+		printf("\n");
 	}
 }
