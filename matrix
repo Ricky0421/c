@@ -31,8 +31,8 @@ int main(){
 		}
 		if(d=='e'){
 			d='z';
-			system("cls");
 			while(1){
+				system("cls");
 				for(int i=0;i<a;i++){
 					for(int j=0;j<b;j++){
 						printf("%d ",p[i][j]);
@@ -58,7 +58,7 @@ int main(){
 						}
 						printf("\n");
 					}
-					printf("수정할 원소의 위치를 입력하세요. ex) 2 3 \n=>");
+					printf("수정할 원소의 위치를 입력하세요. ex) 2 3 \n=> ");
 					scanf("%d %d",&l,&m);
 					printf("수정 값을 입력해주세요.\n=> ");
 					scanf("%d", &z);
@@ -68,8 +68,8 @@ int main(){
 		}
 		else if(d=='r'){
 			d='z';
-			system("cls");
 			while(1){
+				system("cls");
 				for(int i=0;i<b;i++){
 					for(int j=0;j<c;j++){
 						printf("%d ",q[i][j]);
@@ -95,7 +95,7 @@ int main(){
 						}
 						printf("\n");
 					}
-					printf("수정할 원소의 위치를 입력하세요. ex) 2 3 \n=>");
+					printf("수정할 원소의 위치를 입력하세요. ex) 2 3 \n=> ");
 					scanf("%d %d",&l,&m);
 					printf("수정 값을 입력해주세요.\n=> ");
 					scanf("%d", &z);
@@ -120,6 +120,7 @@ int main(){
 		}		
 	}
 	system("cls");
+	printf("AB = \n");
 	for(int i=0;i<a;i++){
 		for(int j=0;j<c;j++){
 			printf("%d ",f[i][j]);
