@@ -1,15 +1,15 @@
 #include <stdio.h>
-char charc[1000][1000]={0,}, goal[4]={S,J,O,I};
-x=0; y=0;
+char charc[1000][1000]={0,}, goal[4]={'S','J','O','I'};
+int x=0, y=0;
 void S(int n, int m){
-	q=0;
+	int q=0;
 	for(int i=0;i<n;i++){
 		for(int j=0;j<m;j++){
 			if(q==0){
 				i=x; j=y;
 				q=1;
 			}
-			if(charc[i][j]==S) {x=i; y=j;}
+			if(charc[i][j]=='S') {x=i; y=j;}
 		}
 	}
 }
@@ -22,7 +22,7 @@ int main(){
 			scanf("%c",&charc[i][j]);
 		}		
 	}
-	g=1; cx=0; cy=0; sat=0;
+	int g=1, cx=0, cy=0, sat=0;
 	while(1){
 		if(g==1) {S(n,m); cx=x; cy=y;}
 		if(charc[cx-1][cy]==goal[g%4] || charc[cx+1][cy]==goal[g%4] || charc[cx][cy-1]==goal[g%4] || charc[cx][cy+1]==goal[g%4]){
@@ -38,7 +38,7 @@ int main(){
 		}
 		else{
 			g=1;
-			if(x=n-1 && y=m-1) break;
+			if(x==n-1 && y==m-1) break;
 		}
 	}
 	printf("%d", sat);
