@@ -1,0 +1,27 @@
+k, n, m=map(int, input().split(' '))
+
+c=[]
+mx=0
+add=0
+px=0
+
+a=list(map(int,input().split(' ')))
+b=list(map(int,input().split(' ')))
+
+for p in range(k+1):
+    if p<=n and k-p<=m:
+        add=0
+        if p!=0:
+            for j in range(p):
+                add+=a[j]
+        if p!=k:
+            for j in range(k-p):
+                add+=b[j]
+        
+        if mx<add:
+            mx=add
+            px=p
+
+print(mx)
+print(f'A: {px}권\nB: {k-px}권')      
+    
